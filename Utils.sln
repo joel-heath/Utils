@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33103.201
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JH24UtilsDemo", "JH24UtilsDemo\JH24UtilsDemo.csproj", "{06E1F2E6-C970-4F05-8097-C49828485EAF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JH24Utils", "JH24Utils\JH24Utils.csproj", "{A8A40A27-2278-4C6F-B7B6-56170999D56E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{06E1F2E6-C970-4F05-8097-C49828485EAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06E1F2E6-C970-4F05-8097-C49828485EAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06E1F2E6-C970-4F05-8097-C49828485EAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06E1F2E6-C970-4F05-8097-C49828485EAF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8A40A27-2278-4C6F-B7B6-56170999D56E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8A40A27-2278-4C6F-B7B6-56170999D56E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8A40A27-2278-4C6F-B7B6-56170999D56E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8A40A27-2278-4C6F-B7B6-56170999D56E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {75206DA6-4239-46C9-A56F-88CFB161C96C}
+	EndGlobalSection
+EndGlobal
