@@ -4,6 +4,14 @@
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Title>joelheath24's Utilities</Title>
+    <Authors>joelheath24</Authors>
+    <Company>joelheath.net</Company>
+    <Description>Library of various utilities</Description>
+    <Copyright>MIT</Copyright>
+    <RepositoryUrl>https://github.com/joelheath24/Utils</RepositoryUrl>
+    <PackageTags>Simplex</PackageTags>
   </PropertyGroup>
 
 </Project>

@@ -1,4 +1,7 @@
-﻿namespace JH24UtilsDemo;
+﻿using JH24Utils;
+using static JH24Utils.Tree;
+
+namespace JH24UtilsDemo;
 
 internal class UtilsDemo
 {
@@ -10,6 +13,25 @@ internal class UtilsDemo
         Console.CursorTop--;
 
         return decimal.Parse(rawUInput);
+    }
+
+
+    static void Pathfind()
+    {
+        HashSet<Node> tree = CreateGraph("1,2:3,5:8" + "\r\n"
+          + "2,1:3,4:5,3:4" + "\r\n"
+          + "3,2:4,7:7,6:1" + "\r\n"
+          + "4,2:5,7:3" + "\r\n"
+          + "5,1:8,6:1" + "\r\n"
+          + "6,5:1,3:1,7:9" + "\r\n"
+          + "7,6:9,3:7,4:3");
+
+        var result = Tree.Dijkstras(tree.First());
+        int i = 0;
+        foreach (var item in result)
+        {
+            Console.WriteLine($"Node {i++}: {item.Value}");
+        }
     }
 
     static void SimplexOneStage()
@@ -101,6 +123,7 @@ internal class UtilsDemo
             switch (uInput.ToLower())
             {
                 case "simplex": SimplexOneStage(); break;
+                case "path": Pathfind(); break;
                 case "list": ListFuncs(); break;
                 case "exit": finished = true; break;
             }
