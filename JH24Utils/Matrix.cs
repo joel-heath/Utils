@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace JH24Utils;
 public static class MatrixExtensions
@@ -56,8 +54,10 @@ public static class MatrixExtensions
         return widened;
     }
 }
-public class MatrixNotSquare : Exception { }
-public class Matrix 
+public class DimensionLessThanOneException : Exception { }
+public class MatrixNotSquareException : Exception { }
+public class MatrixSingularException : Exception { }
+public class Matrix
 {
     private double[,] values;
     public readonly int Rows;
@@ -67,9 +67,74 @@ public class Matrix
     {
         get
         {
-            if (!Square) throw new MatrixNotSquare();
-            throw new NotImplementedException();
-            //return values[0, 0] * values[1, 1] - values[0, 1] * values[1, 0];
+            if (!Square) throw new MatrixNotSquareException();
+            if (Rows == 1) return values[0, 0];
+            if (Rows == 2) return values[0, 0] * values[1, 1] - values[0, 1] * values[1, 0];
+
+            double determinant = 0;
+            double[] topRow = GetRow(0).ToArray();
+            for (int i = 0; i < Columns; i++)
+            {
+                double scalar = topRow[i];
+                Matrix minor = Minor(0, i);
+
+                if (i % 2 == 0)
+                    determinant += scalar * minor.Determinant;
+                else
+                    determinant -= scalar * minor.Determinant;
+            }
+
+            return determinant;
+        }
+    }
+
+    public Matrix Transpose
+    {
+        get
+        {
+            if (!Square) throw new MatrixNotSquareException();
+            Matrix m = new(Rows);
+            for (int i = 0; i < Rows; i++)
+            {
+                for (int j = 0; j < Columns; j++)
+                {
+                    m[i, j] = values[j, i];
+                }
+            }
+
+            return m;
+        }
+    }
+
+    public Matrix Adjacent
+    {
+        get
+        {
+            if (!Square) throw new MatrixNotSquareException();
+            Matrix t = Transpose;
+            Matrix m = new(Rows);
+
+            for (int i = 0; i < Rows; i++)
+            {
+                for (int j = 0; j < Columns; j++)
+                {
+                    double minor = t.Minor(i, j).Determinant;
+                    int cofactor = (i % 2 == 0) ? (j % 2 == 0 ? 1 : -1) : (j % 2 == 0 ? -1 : 1);
+                    m[i, j] = cofactor * minor;
+                }
+            }
+
+            return m;
+        }
+    }
+
+    public Matrix Inverse
+    {
+        get
+        {
+            double det = Determinant;
+            if (det == 0) throw new MatrixSingularException();
+            return (1 / det) * Adjacent;
         }
     }
 
@@ -117,9 +182,19 @@ public class Matrix
 
     public Matrix(int rows, int cols)
     {
+        if (rows < 1 || cols < 1) throw new DimensionLessThanOneException();
         Rows = rows;
         Columns = cols;
         Square = rows == cols;
+        values = new double[Rows, Columns];
+    }
+
+    public Matrix(int dimension)
+    {
+        if (dimension < 1) throw new DimensionLessThanOneException();
+        Rows = dimension;
+        Columns = dimension;
+        Square = true;
         values = new double[Rows, Columns];
     }
 
@@ -200,34 +275,6 @@ public class Matrix
         return m;
     }
 
-    
-
-    public static Matrix Identity(int dimension)
-    {
-        Matrix m = Zero(dimension);
-        for (int i = 0; i < dimension; i++) { m[i, i] = 1; }
-
-        return m;
-    }
-    public static Matrix Zero(int dimension) => new(dimension, dimension);
-
-
-    public Matrix Minor(int row, int col)
-    {
-        List<int> contents = new();
-        for (int i = 0; i < Rows; i++)
-        {
-            if (i == row) continue;
-            for (int j = 0; j < Columns; j++)
-            {
-                if (j == col) continue;
-                contents.Add(values[i, j]);
-            }
-        }
-
-        return new Matrix(Rows - 1, Cols - 1, contents);
-    }
-
     public override string ToString()
     {
         StringBuilder sb = new();
@@ -244,5 +291,31 @@ public class Matrix
         }
 
         return sb.ToString().TrimEnd('\n').TrimEnd('\r');
+    }
+
+    public static Matrix Identity(int dimension)
+    {
+        Matrix m = Zero(dimension);
+        for (int i = 0; i < dimension; i++) { m[i, i] = 1; }
+
+        return m;
+    }
+    public static Matrix Zero(int dimension) => new(dimension, dimension);
+
+    public Matrix Minor(int row, int col)
+    {
+        if (!Square) throw new MatrixNotSquareException();
+        List<double> contents = new((row - 1) * (row - 1));
+        for (int i = 0; i < Rows; i++)
+        {
+            if (i == row) continue;
+            for (int j = 0; j < Columns; j++)
+            {
+                if (j == col) continue;
+                contents.Add(values[i, j]);
+            }
+        }
+
+        return new Matrix(Rows - 1, Columns - 1, contents);
     }
 }
