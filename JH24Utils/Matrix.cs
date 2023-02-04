@@ -59,7 +59,7 @@ public class MatrixNotSquareException : Exception { }
 public class MatrixSingularException : Exception { }
 public class Matrix
 {
-    private double[,] values;
+    private readonly double[,] values;
     public readonly int Rows;
     public readonly int Columns;
     public readonly bool Square;

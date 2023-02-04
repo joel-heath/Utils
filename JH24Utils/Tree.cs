@@ -10,10 +10,10 @@ public class Tree
     }
 
     /// <summary>
-    /// Standard Dijkstras algorithm for distance to all nodes in the graph.
+    /// Standard Dijkstra's algorithm for distance to all nodes in the graph.
     /// </summary>
     /// <param name="start">The starting node (distance 0).</param>
-    /// <param name="graph">The graph of nodes to pathfind through.</param>
+    /// <param name="graph">The graph of nodes to path find through.</param>
     /// <returns>Dictionary of INode node to int distance from start and including start node.</returns>
     public static Dictionary<INode, int> Dijkstras(INode start)
     {

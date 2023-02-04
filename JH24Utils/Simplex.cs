@@ -1,16 +1,15 @@
 ﻿namespace JH24Utils;
-
 public class Simplex
 {
-    public static decimal[][] OneStageSimplex(decimal[,] tableux)
+    public static decimal[][] OneStageSimplex(decimal[,] tableau)
     {
         bool maximised = false;
         while (!maximised)
         {
-            if (Iteration(tableux)) { maximised = true; }
+            if (Iteration(tableau)) { maximised = true; }
         }
 
-        return ToBasicJagArray(tableux);
+        return ToBasicJagArray(tableau);
     }
     static int TopRow(decimal[,] table)
     {
@@ -72,7 +71,7 @@ public class Simplex
 
     static decimal[][] ToBasicJagArray(decimal[,] table)
     {
-        // converts 2d array into jagged array, aswell as removing any non-basic columns
+        // converts 2d array into jagged array, as well as removing any non-basic columns
         int rows = table.GetLength(0);
         int cols = table.GetLength(1);
 
