@@ -1,59 +1,5 @@
-﻿using System;
-using System.Linq;
-using System.Text;
+﻿namespace JH24Utils.Matrices;
 
-namespace JH24Utils;
-public static class MatrixExtensions
-{
-    public static Matrix Translate(this Matrix points, params double[] units)
-    {
-        Matrix translation = new(points.Rows, points.Columns, units.Select(u => Enumerable.Repeat(u, points.Columns)));
-        return translation + points;
-    }
-    public static Matrix Enlarge(this Matrix points, double factor) => factor * Matrix.Identity(points.Rows) * points;
-    public static Matrix Stretch(this Matrix points, params double[] factors)
-    {
-        Matrix m = Matrix.Zero(points.Rows);
-        for (int i = 0; i < points.Rows; i++) { m[i, i] = factors[i]; }
-
-        return m;
-    }
-    public static Matrix Rescale(this Matrix points, params double[] upperBounds)
-    {
-        double[] oldUpperBounds = Enumerable.Repeat(double.MinValue, upperBounds.Length).ToArray();
-
-        for (int i = 0; i < points.Columns; i++)
-        {
-            for (int j = 0; j < oldUpperBounds.Length; j++)
-            {
-                if (points[j, i] > oldUpperBounds[j]) oldUpperBounds[j] = points[j, i];
-            }
-        }
-
-        return points.Stretch(upperBounds.Select((b, i) => b / oldUpperBounds[i]).ToArray()) * points;
-    }
-
-    public static Matrix EnlargeArea(this Matrix points, int factor)
-    {
-        Matrix enlarged = points.Enlarge(factor);
-
-        Matrix widened = new(points.Rows, points.Columns * factor * factor);
-        for (int i = 0; i < enlarged.Columns; i++)
-        {
-            var col = enlarged.GetCol(i).ToArray();
-            for (int y = 0; y < factor; y++)
-            {
-                for (int x = 0; x < factor; x++)
-                {
-                    widened[0, i * factor * factor + y * factor + x] = col[0] + x - (factor / 2);
-                    widened[1, i * factor * factor + y * factor + x] = col[1] + y - (factor / 2);
-                }
-            }
-        }
-
-        return widened;
-    }
-}
 public class DimensionLessThanOneException : Exception { }
 public class MatrixNotSquareException : Exception { }
 public class MatrixSingularException : Exception { }
@@ -119,7 +65,7 @@ public class Matrix
                 for (int j = 0; j < Columns; j++)
                 {
                     double minor = t.Minor(i, j).Determinant;
-                    int cofactor = (i % 2 == 0) ? (j % 2 == 0 ? 1 : -1) : (j % 2 == 0 ? -1 : 1);
+                    int cofactor = i % 2 == 0 ? j % 2 == 0 ? 1 : -1 : j % 2 == 0 ? -1 : 1;
                     m[i, j] = cofactor * minor;
                 }
             }
@@ -134,8 +80,34 @@ public class Matrix
         {
             double det = Determinant;
             if (det == 0) throw new MatrixSingularException();
-            return (1 / det) * Adjacent;
+            return 1 / det * Adjacent;
         }
+    }
+
+    public static Matrix Identity(int dimension)
+    {
+        Matrix m = Zero(dimension);
+        for (int i = 0; i < dimension; i++) { m[i, i] = 1; }
+
+        return m;
+    }
+    public static Matrix Zero(int dimension) => new(dimension, dimension);
+
+    public Matrix Minor(int row, int col)
+    {
+        if (!Square) throw new MatrixNotSquareException();
+        List<double> contents = new((row - 1) * (row - 1));
+        for (int i = 0; i < Rows; i++)
+        {
+            if (i == row) continue;
+            for (int j = 0; j < Columns; j++)
+            {
+                if (j == col) continue;
+                contents.Add(values[i, j]);
+            }
+        }
+
+        return new Matrix(Rows - 1, Columns - 1, contents);
     }
 
     public double this[int i, int j]
@@ -247,17 +219,17 @@ public class Matrix
 
     public static Matrix operator *(double scalar, Matrix matrix)
     {
-        Matrix @new = new(matrix.Rows, matrix.Columns);
+        Matrix m = new(matrix.Rows, matrix.Columns);
 
         for (int i = 0; i < matrix.Rows; i++)
         {
             for (int j = 0; j < matrix.Columns; j++)
             {
-                @new[i, j] = scalar * matrix[i, j];
+                m[i, j] = scalar * matrix[i, j];
             }
         }
 
-        return @new;
+        return m;
     }
 
     public static Matrix operator *(Matrix a, Matrix b)
@@ -277,7 +249,7 @@ public class Matrix
 
     public override string ToString()
     {
-        StringBuilder sb = new();
+        System.Text.StringBuilder sb = new();
         for (int i = 0; i < Rows; i++)
         {
             sb.Append('[');
@@ -291,31 +263,5 @@ public class Matrix
         }
 
         return sb.ToString().TrimEnd('\n').TrimEnd('\r');
-    }
-
-    public static Matrix Identity(int dimension)
-    {
-        Matrix m = Zero(dimension);
-        for (int i = 0; i < dimension; i++) { m[i, i] = 1; }
-
-        return m;
-    }
-    public static Matrix Zero(int dimension) => new(dimension, dimension);
-
-    public Matrix Minor(int row, int col)
-    {
-        if (!Square) throw new MatrixNotSquareException();
-        List<double> contents = new((row - 1) * (row - 1));
-        for (int i = 0; i < Rows; i++)
-        {
-            if (i == row) continue;
-            for (int j = 0; j < Columns; j++)
-            {
-                if (j == col) continue;
-                contents.Add(values[i, j]);
-            }
-        }
-
-        return new Matrix(Rows - 1, Columns - 1, contents);
     }
 }

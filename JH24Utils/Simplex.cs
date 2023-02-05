@@ -75,7 +75,7 @@ public class Simplex
         int rows = table.GetLength(0);
         int cols = table.GetLength(1);
 
-        List<int> nonBasics = new();
+        HashSet<int> nonBasics = new();
 
         for (int r = 0; r < rows; r++)
         {

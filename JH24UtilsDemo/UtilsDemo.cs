@@ -1,4 +1,5 @@
 ﻿using JH24Utils;
+using JH24Utils.Matrices;
 using static JH24Utils.Tree;
 
 namespace JH24UtilsDemo;

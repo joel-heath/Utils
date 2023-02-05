@@ -1,7 +1,7 @@
 ﻿namespace JH24Utils;
 public static class CollectionExtensions
-{
-    static int[] BubbleSort(this IEnumerable<int> input)
+{ 
+    public static int[] BubbleSort(this IEnumerable<int> input)
     {
         int[] output = input.ToArray();
         bool sorted = false;
@@ -20,7 +20,7 @@ public static class CollectionExtensions
         return output;
     }
 
-    static int[] QuickSort(this IReadOnlyList<int> input)
+    public static int[] QuickSort(this IReadOnlyList<int> input)
     {
         if (input.Count <= 1) return input.ToArray();
 
@@ -38,7 +38,7 @@ public static class CollectionExtensions
               .ToArray();
     }
 
-    static int[] Merge(int[] left, int[] right)
+    public static int[] Merge(int[] left, int[] right)
     {
         int[] merged = new int[left.Length + right.Length];
         int li = 0, ri = 0, mi = 0;
@@ -52,7 +52,7 @@ public static class CollectionExtensions
         return merged;
     }
 
-    static int[] MergeSort(this IEnumerable<int> input)
+    public static int[] MergeSort(this IEnumerable<int> input)
     {
         int[][] subarrays = input.Select(n => new int[] { n }).ToArray();
 
@@ -72,5 +72,4 @@ public static class CollectionExtensions
 
         return subarrays[0];
     }
-
 }
