@@ -1,9 +1,9 @@
 ﻿using JH24Utils;
 using JH24Utils.Matrices;
+using JH24Utils.Statistics;
 using static JH24Utils.Tree;
 
 namespace JH24UtilsDemo;
-
 internal class UtilsDemo
 {
     static decimal ReadNum()
@@ -159,7 +159,7 @@ internal class UtilsDemo
             Console.WriteLine();
         }
 
-        decimal[][] final = JH24Utils.Simplex.OneStageSimplex(tableau);
+        decimal[][] final = Simplex.OneStageSimplex(tableau);
 
         string[] trueVars = new string[] { "P" }.Concat(vars).ToArray();
 

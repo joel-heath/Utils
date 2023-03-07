@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace JH24Utils;
+﻿namespace JH24Utils;
 public class Tree
 {
     public interface INode

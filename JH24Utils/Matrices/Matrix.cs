@@ -52,7 +52,7 @@ public class Matrix
         }
     }
 
-    public Matrix Adjacent
+    public Matrix Adjugate
     {
         get
         {
@@ -80,7 +80,7 @@ public class Matrix
         {
             double det = Determinant;
             if (det == 0) throw new MatrixSingularException();
-            return 1 / det * Adjacent;
+            return 1 / det * Adjugate;
         }
     }
 
