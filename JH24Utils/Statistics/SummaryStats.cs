@@ -39,4 +39,36 @@ public readonly record struct SummaryStats
         Syy = Σy2 - Σy * Σy / n;
         Sxy = Σxy - Σx * Σy / n;
     }
+
+    public SummaryStats(IReadOnlyList<double> xVals, IReadOnlyList<double> yVals)
+    {
+        n = xVals.Count;
+        Σx = 0;
+        Σy = 0;
+        Σx2 = 0;
+        Σy2 = 0;
+        Σxy = 0;
+
+        for (int i = 0; i < n; i++)
+        {
+            var (x, y) = (xVals[i], yVals[i]);
+            Σx += x;
+            Σy += y;
+            Σx2 += x * x;
+            Σy2 += y * y;
+            Σxy += x * y;
+        }
+
+        x̄ = Σx / n;
+        ȳ = Σy / n;
+
+        σx2 = Σx2 / n - x̄ * x̄;
+        σy2 = Σy2 / n - ȳ * ȳ;
+        σx = Math.Sqrt(σx2);
+        σy = Math.Sqrt(σy2);
+
+        Sxx = Σx2 - Σx * Σx / n;
+        Syy = Σy2 - Σy * Σy / n;
+        Sxy = Σxy - Σx * Σy / n;
+    }
 }
