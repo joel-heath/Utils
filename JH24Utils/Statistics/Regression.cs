@@ -4,20 +4,6 @@ using System.Runtime.CompilerServices;
 
 namespace JH24Utils.Statistics;
 
-public class RankedItem
-{
-    public readonly double x;
-    public readonly double y;
-    public double xRank;
-    public double yRank;
-
-    public RankedItem(double x, double y, double xRank = -1, double yRank = -1)
-    {
-        (this.x, this.y, this.xRank, this.yRank) = (x, y, xRank, yRank);
-    }
-
-    public static implicit operator RankedItem((double x, double y) tuple) => new(tuple.x, tuple.y);
-};
 public class Regression
 {
     private readonly ImmutableArray<(double x, double y)> _data;
@@ -31,6 +17,20 @@ public class Regression
     /// </summary>
     /// <returns>The PMCC (-1 ≤ r ≤ 1).</returns>
     public double PMCC() => _stats.Sxy / Math.Sqrt(_stats.Sxx * _stats.Syy);
+    private class RankedItem // For Spearman's Rank
+    {
+        public readonly double x;
+        public readonly double y;
+        public double xRank;
+        public double yRank;
+
+        public RankedItem(double x, double y, double xRank = -1, double yRank = -1)
+        {
+            (this.x, this.y, this.xRank, this.yRank) = (x, y, xRank, yRank);
+        }
+
+        public static implicit operator RankedItem((double x, double y) tuple) => new(tuple.x, tuple.y);
+    };
     /// <summary>
     /// Calculates the Spearman's Rank Correlation Coefficient (ρ / rs) value for a given set of data.
     /// </summary>

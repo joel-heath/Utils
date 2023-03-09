@@ -20,21 +20,22 @@ public static class CollectionExtensions
         return output;
     }
 
-    public static IEnumerable<T> QuickSort<T>(this IReadOnlyList<T> input) where T : IComparable<T>
+    public static IEnumerable<T> QuickerSort<T>(this IReadOnlyList<T> input) where T : IComparable<T>
     {
-        if (input.Count <= 1) return input;
+        if (input.Count <= 1) yield return input[0];
 
-        List<T> smaller = new(input.Count), larger = new(input.Count);
+        T[] smaller = new T[input.Count], larger = new T[input.Count];
+        int smallerIndex = 0, largerIndex = 0;
 
         for (int i = 1; i < input.Count; i++)
         {
-            if (input[i].CompareTo(input[0]) < 0) smaller.Add(input[i]);
-            else larger.Add(input[i]);
+            if (input[i].CompareTo(input[0]) < 0) smaller[smallerIndex++] = input[i];
+            else larger[largerIndex++] = input[i];
         }
 
-        return QuickSort(smaller)
-              .Append(input[0])
-              .Concat(QuickSort(larger));
+        foreach (var item in QuickerSort(smaller.Take(smallerIndex + 1).ToArray())) yield return item;
+        yield return input[0];
+        foreach (var item in QuickerSort(larger.Take(largerIndex + 1).ToArray())) yield return item;
     }
 
     public static T[] Merge<T>(T[] left, T[] right) where T : IComparable<T>
