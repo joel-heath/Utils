@@ -1,4 +1,7 @@
-﻿namespace JH24Utils;
+﻿using System.Collections.Generic;
+using System.Diagnostics.Metrics;
+
+namespace JH24Utils;
 public static class CollectionExtensions
 { 
     public static IEnumerable<T> BubbleSort<T>(this IEnumerable<T> input) where T : IComparable<T>
@@ -20,9 +23,36 @@ public static class CollectionExtensions
         return output;
     }
 
-    public static IEnumerable<T> QuickerSort<T>(this IReadOnlyList<T> input) where T : IComparable<T>
+    public static IEnumerable<T> QuickSort<T>(this IReadOnlyList<T> input) where T : IComparable<T> => RecursiveQuickSort(input, input.Count); 
+    private static IEnumerable<T> RecursiveQuickSort<T>(IReadOnlyList<T> input, int count) where T : IComparable<T>
     {
-        if (input.Count <= 1) yield return input[0];
+        if (count <= 1)
+        {
+            foreach (var item in input.Take(count)) yield return item;
+            yield break;
+        }
+
+        T[] smaller = new T[count], larger = new T[count];
+        int smallerIndex = 0, largerIndex = 0;
+
+        for (int i = 1; i < count; i++)
+        {
+            if (input[i].CompareTo(input[0]) < 0) smaller[smallerIndex++] = input[i];
+            else larger[largerIndex++] = input[i];
+        }
+
+        foreach (var item in RecursiveQuickSort(smaller, smallerIndex)) yield return item;
+        yield return input[0];
+        foreach (var item in RecursiveQuickSort(larger, largerIndex)) yield return item;
+    }
+
+    public static IEnumerable<T> QuickSortArrays<T>(this IReadOnlyList<T> input) where T : IComparable<T>
+    {
+        if (input.Count <= 1)
+        {
+            foreach (var item in input) yield return item;
+            yield break;
+        }
 
         T[] smaller = new T[input.Count], larger = new T[input.Count];
         int smallerIndex = 0, largerIndex = 0;
@@ -33,9 +63,9 @@ public static class CollectionExtensions
             else larger[largerIndex++] = input[i];
         }
 
-        foreach (var item in QuickerSort(smaller.Take(smallerIndex + 1).ToArray())) yield return item;
+        foreach (var item in QuickSortArrays(smaller.Take(smallerIndex).ToArray())) yield return item;
         yield return input[0];
-        foreach (var item in QuickerSort(larger.Take(largerIndex + 1).ToArray())) yield return item;
+        foreach (var item in QuickSortArrays(larger.Take(largerIndex).ToArray())) yield return item;
     }
 
     public static T[] Merge<T>(T[] left, T[] right) where T : IComparable<T>

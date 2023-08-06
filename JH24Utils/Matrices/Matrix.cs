@@ -65,7 +65,7 @@ public class Matrix
                 for (int j = 0; j < Columns; j++)
                 {
                     double minor = t.Minor(i, j).Determinant;
-                    int cofactor = i % 2 == 0 ? j % 2 == 0 ? 1 : -1 : j % 2 == 0 ? -1 : 1;
+                    int cofactor = (i + j) % 2 == 0 ? 1 : -1; //  [-2 * ((i + j) % 2) + 1]      [i % 2 == 0 ? j % 2 == 0 ? 1 : -1 : j % 2 == 0 ? -1 : 1]
                     m[i, j] = cofactor * minor;
                 }
             }

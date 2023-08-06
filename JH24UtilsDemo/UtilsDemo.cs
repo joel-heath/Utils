@@ -1,6 +1,7 @@
 ﻿using JH24Utils;
 using JH24Utils.Matrices;
 using JH24Utils.Statistics;
+using JH24Utils.Numeracy;
 using static JH24Utils.Tree;
 
 namespace JH24UtilsDemo;
@@ -192,6 +193,50 @@ internal class UtilsDemo
     }
 
     static readonly string[] funcs = { "Simplex", "Path(find)", "Matrix" };
+
+    static double[] GenerateTestData(int n)
+    {
+        double[] arr = new double[n];
+        for (int i = 0; i < n; i++)
+        {
+            arr[i] = Random.Shared.Next();
+        }
+
+        return arr;
+    }
+    static TimeSpan Benchmark(Func<double[], IEnumerable<double>> algorithm, int trials = 100000, int n = 10000)
+    {
+        TimeSpan sum = new(0);
+        for (int i = 0; i < trials; i++)
+        {
+            var data = GenerateTestData(n);
+            var now = DateTime.Now;
+            algorithm(data);
+            sum += DateTime.Now - now;
+        }
+        return sum / 100;
+    }
+
+    static void InfixToPostfix(string infix)
+    {
+        Console.ForegroundColor = ConsoleColor.Yellow;
+        Console.Write("Infix: ");
+        Console.ForegroundColor = ConsoleColor.White;
+        Console.WriteLine(infix);
+
+        Console.ForegroundColor = ConsoleColor.Magenta;
+        Queue<ShuntingYard.Token> postfix = ShuntingYard.InfixToPostfix(ShuntingYard.Token.Tokenize(infix));
+
+        Console.Write("Postfix: ");
+        Console.ForegroundColor = ConsoleColor.White;
+        while (postfix.TryDequeue(out ShuntingYard.Token o))
+        {
+            Console.Write(o.ToString() + ' ');
+        }
+
+        Console.WriteLine();
+    }
+
     static void Main()
     {
         Console.ForegroundColor = ConsoleColor.Gray;
