@@ -1,17 +1,11 @@
-﻿namespace JH24Utils;
-public class Tree
-{
-    public interface INode
-    {
-        public Dictionary<INode, int> Arcs { get; set; }
-        public int? Value { get; set; }
-    }
+﻿namespace JH24Utils.Graphs;
 
+public static class GraphUtils
+{
     /// <summary>
     /// Standard Dijkstra's algorithm for distance to all nodes in the graph.
     /// </summary>
     /// <param name="start">The starting node (distance 0).</param>
-    /// <param name="graph">The graph of nodes to path find through.</param>
     /// <returns>Dictionary of INode node to int distance from start and including start node.</returns>
     public static Dictionary<INode, int> Dijkstras(INode start)
     {
@@ -41,12 +35,10 @@ public class Tree
         return paths;
     }
 
-    
-
     public static HashSet<Node> CreateGraph(string input)
     {
         HashSet<Node> nodes = new();
-        Dictionary<string, (Node node, (string name, int weight)[] connections) > nodeLegend = new();
+        Dictionary<string, (Node node, (string name, int weight)[] connections)> nodeLegend = new();
         string[] lines = input.Split("\r\n");
         for (int i = 0; i < lines.Length; i++)
         {
@@ -64,15 +56,5 @@ public class Tree
         }
 
         return nodes;
-    }
-
-    public class Node : INode
-    {
-        private Dictionary<INode, int> arcs;
-        private int? value;
-        public Dictionary<INode, int> Arcs { get => this.arcs; set => this.arcs = value; }
-        public int? Value { get => this.value; set => this.value = value; }
-        public Node(Dictionary<INode, int> arcs, int? value) : this(arcs) => this.value = value;
-        public Node(Dictionary<INode, int> arcs) => this.arcs = arcs;
     }
 }
